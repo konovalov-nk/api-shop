@@ -6,6 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'rails', '~> 5.1.5'
+
 gem 'sqlite3'
 gem 'puma', '~> 3.7'
 
@@ -18,6 +19,8 @@ gem 'puma', '~> 3.7'
 
 group :development, :test do
   gem 'byebug'
+  gem 'factory_bot_rails'
+  gem 'rspec-rails'
 end
 
 group :development do
