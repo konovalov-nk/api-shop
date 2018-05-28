@@ -5,4 +5,6 @@ class User < ApplicationRecord
          :jwt_authenticatable,
          :registerable, :recoverable, :rememberable, :trackable, :validatable,
          jwt_revocation_strategy: self
+
+  validates :first_name, :last_name, presence: true
 end

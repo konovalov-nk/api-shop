@@ -3,7 +3,12 @@ require 'rails_helper'
 RSpec.describe 'Users', type: :request do
   let(:valid_attributes) {
     {
+        first_name: Faker::Name.first_name,
+        last_name: Faker::Name.last_name,
         email: Faker::Internet.email,
+        city: Faker::Address.city,
+        country: Faker::Address.country_code_long.downcase,
+        post_code: Faker::Address.postcode,
         password: 'example',
         password_confirmation: 'example',
     }
@@ -102,6 +107,8 @@ RSpec.describe 'Users', type: :request do
             errors: {
                 email: ['is invalid'],
                 password: ["can't be blank"],
+                first_name: ["can't be blank"],
+                last_name: ["can't be blank"],
             }
         }.to_json
 
