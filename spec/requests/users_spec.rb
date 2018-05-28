@@ -56,6 +56,34 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
+  describe 'GET /users/show/:id' do
+    context 'given user is logged in' do
+      it 'renders response' do
+        attributes = valid_attributes
+        user = create(:user, attributes)
+        jwt = confirm_and_login(user)
+
+        get_with_token "/users/show/#{user.id}", {}, { 'Authorization' => jwt }
+
+        expect(response).to have_http_status(:ok)
+
+        expected = {
+            id: user.id,
+            email: attributes[:email],
+            first_name: attributes[:first_name],
+            last_name: attributes[:last_name],
+            city: attributes[:city],
+            country: attributes[:country],
+            post_code: attributes[:post_code],
+        }
+        hash = JSON.parse(response.body)
+
+        expected.each { |k, v| expect(hash[k.to_s]).to eql(v) }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
   describe 'POST /users' do
     context 'given valid attributes' do
       before(:each) do
