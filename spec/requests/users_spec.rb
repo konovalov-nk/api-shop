@@ -15,27 +15,38 @@ RSpec.describe 'Users', type: :request do
     }
   }
 
-  let(:valid_session) { {} }
-
   describe 'GET /users/test' do
     context 'given valid credentials' do
       it 'renders :ok response if signed in' do
         user = create(:user)
         jwt = confirm_and_login(user)
-        get '/users/test', headers: { 'Authorization' => jwt }
+        get_with_token '/users/test', { id: user.id }, { 'Authorization' => jwt }
 
         expect(response).to have_http_status(:ok)
       end
     end
 
     context 'given invalid credentials' do
-      it 'redirects user' do
+      it 'renders :unauthorized response' do
         user = create(:user)
         user.password = user.password_confirmation = 'wrong_password'
         jwt = confirm_and_login(user)
-        get '/users/test', headers: { 'Authorization' => jwt }
+        get_with_token '/users/test', { id: user.id }, { 'Authorization' => jwt }
 
-        expect(response).to have_http_status(:redirect)
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'given user is logged out' do
+      it 'renders :unauthorized response if signed in' do
+        attributes = valid_attributes
+        user = create(:user, attributes)
+        jwt = confirm_and_login(user)
+        logout(jwt)
+
+        get_with_token '/users/test', { id: user.id }, { 'Authorization' => jwt }
+
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
@@ -48,18 +59,17 @@ RSpec.describe 'Users', type: :request do
 
       it 'creates a new User' do
         expect {
-          post '/users', params: { user: @attributes }
+          post_with_token '/users', user: @attributes
         }.to change(User, :count).by(1)
       end
 
       it 'responds with 201 for valid parameters' do
-        post '/users', params: { user: @attributes }
+        post_with_token '/users', user: @attributes
         expect(response).to have_http_status(201)
       end
 
       it 'renders json' do
-
-        post '/users', params: { user: @attributes }
+        post_with_token '/users', user: @attributes
         expected = {
             id: 1,
             email: @attributes[:email],
@@ -77,17 +87,17 @@ RSpec.describe 'Users', type: :request do
 
       it 'does not create a new User' do
         expect {
-          post '/users', params: { user: @attributes }
+          post_with_token '/users', user: @attributes
         }.to_not change(User, :count)
       end
 
       it 'responds with 422' do
-        post '/users', params: { user: @attributes }
+        post_with_token '/users', user: @attributes
         expect(response).to have_http_status(422)
       end
 
       it 'shows errors' do
-        post '/users', params: { user: @attributes }
+        post_with_token '/users', user: @attributes
         expected = {
             errors: {
                 email: ['is invalid'],
@@ -125,11 +135,11 @@ RSpec.describe 'Users', type: :request do
     context 'given user is logged in' do
       before(:each) do
         @user = create(:user)
-        confirm_and_login(@user)
+        @jwt = confirm_and_login(@user)
       end
 
       it 'signs user out' do
-        logout(@user)
+        logout(@jwt)
 
         expect(response).to be_success
       end
@@ -138,14 +148,14 @@ RSpec.describe 'Users', type: :request do
     context 'given user is logged out' do
       before(:each) do
         @user = create(:user)
-        confirm_and_login(@user)
-        logout(@user)
+        @jwt = confirm_and_login(@user)
+        logout(@jwt)
       end
 
-      it 'gives an error' do
-        logout(@user)
+      it 'JWT is not the same' do
+        jwt = confirm_and_login(@user)
 
-        # expect(response).to_not be_success
+        expect(@jwt).to_not eql(jwt)
       end
     end
 
