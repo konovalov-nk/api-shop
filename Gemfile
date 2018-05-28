@@ -19,7 +19,9 @@ gem 'puma', '~> 3.7'
 
 group :development, :test do
   gem 'byebug'
+  gem 'dotenv-rails'
   gem 'factory_bot_rails'
+  gem 'faker'
   gem 'rspec-rails'
 end
 
@@ -29,5 +31,6 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
+gem 'devise'
 gem 'devise-jwt', '~> 0.5.6'
 gem 'rubocop', require: false
