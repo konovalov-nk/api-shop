@@ -9,6 +9,16 @@ RSpec.describe User, type: :model do
     it 'is valid' do
       expect(@user).to be_valid
     end
+
+    it 'has a full_name getter' do
+      user = build(:user, first_name: 'John', last_name: 'Wick')
+      expect(user.full_name).to eql('John Wick')
+    end
+
+    it 'has a country_name getter' do
+      user = build(:user, country: 'usa')
+      expect(user.country_name).to eql('United States of America')
+    end
   end
 
   context 'given invalid attributes' do

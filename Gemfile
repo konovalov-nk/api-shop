@@ -33,5 +33,6 @@ end
 
 gem 'devise'
 gem 'devise-jwt', '~> 0.5.6'
+gem 'normalize_country'
 gem 'mailgun_rails'
 gem 'rubocop', require: false

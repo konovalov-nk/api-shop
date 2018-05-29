@@ -7,4 +7,12 @@ class User < ApplicationRecord
          jwt_revocation_strategy: self
 
   validates :first_name, :last_name, presence: true
+
+  def full_name
+    "#{self.first_name} #{self.last_name}".chomp
+  end
+
+  def country_name
+    NormalizeCountry.convert self.country, to: :official
+  end
 end
