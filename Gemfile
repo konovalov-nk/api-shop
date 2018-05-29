@@ -33,4 +33,5 @@ end
 
 gem 'devise'
 gem 'devise-jwt', '~> 0.5.6'
+gem 'mailgun_rails'
 gem 'rubocop', require: false
