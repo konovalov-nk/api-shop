@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :users, defaults: { format: :json }
+  devise_for :users, controllers: {
+      registrations: 'sessions/registrations'
+  }, defaults: { format: :json }
 
   get '/users/test', to: 'users#test', as: 'user_test'
   get '/users/show/:id', to: 'users#show', as: 'user_show'
