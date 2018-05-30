@@ -10,8 +10,10 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     super
-    @user = User.find(resource.id)
-    UserMailer.welcome_email(@user)
+    if resource.id
+      @user = User.find(resource.id)
+      UserMailer.welcome_email(@user)
+    end
   end
 
   # GET /resource/edit

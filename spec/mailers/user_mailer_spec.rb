@@ -6,7 +6,7 @@ RSpec.describe UserMailer, type: :mailer do
 
   context 'welcome_email' do
     it 'renders the subject' do
-      expect(welcome_mail.subject).to eql('Thank you for the registration!')
+      expect(welcome_mail.subject).to eql('Thank you for joining!')
     end
 
     it 'renders the receiver email' do
