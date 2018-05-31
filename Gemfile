@@ -22,7 +22,9 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'guard-rspec', require: false
   gem 'rspec-rails'
+  gem 'simplecov', require: false, group: :test
 end
 
 group :development do

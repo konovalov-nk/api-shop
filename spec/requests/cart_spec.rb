@@ -55,7 +55,6 @@ RSpec.describe 'Cart', type: :request do
 
       it 'returns order number' do
         post_with_token '/cart/create', valid_params, 'Authorization' => user_jwt
-
         expect(response.body).to eql({ order_id: 1 }.to_json)
       end
 
