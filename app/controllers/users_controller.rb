@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy, :test]
   before_action :authenticate_user!, only: [:index, :create, :show, :update, :destroy, :test]
+  before_action :set_user, only: [:show, :update, :destroy, :test]
   before_action :forbid, only: [:index, :destroy]
 
   # GET /users
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user
+    render json: @user.slice(:id, :email, :first_name, :last_name, :city, :country, :post_code)
   end
 
   # POST /users
@@ -46,10 +46,6 @@ class UsersController < ApplicationController
   end
 
   private
-    def forbid
-      render json: {}, status: :unauthorized
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])

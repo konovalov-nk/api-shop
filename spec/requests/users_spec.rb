@@ -13,20 +13,30 @@ RSpec.describe 'Users', type: :request do
         password_confirmation: 'example',
     }
   }
-
   let(:invalid_attributes) {
     {
         email: 'incorrect email'
     }
   }
+  let(:user) { create(:user) }
+  let(:user_jwt) { confirm_and_login(user) }
+  let(:invalid_user) { create(:user) }
+  let(:user_attributes) {
+    {
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        city: user.city,
+        country: user.country,
+        post_code: user.post_code,
+    }
+  }
 
   describe 'GET /users/test' do
-    context 'given valid credentials' do
+    context 'as valid user' do
       it 'renders :ok response if signed in' do
-        user = create(:user)
-        jwt = confirm_and_login(user)
-        get_with_token '/users/test', { id: user.id }, { 'Authorization' => jwt }
-
+        get_with_token '/users/test', { id: user.id }, { 'Authorization' => user_jwt }
         expect(response).to have_http_status(:ok)
       end
     end
@@ -36,76 +46,82 @@ RSpec.describe 'Users', type: :request do
         user = create(:user)
         user.password = user.password_confirmation = 'wrong_password'
         jwt = confirm_and_login(user)
-        get_with_token '/users/test', { id: user.id }, { 'Authorization' => jwt }
 
+        get_with_token '/users/test', { id: user.id }, { 'Authorization' => jwt }
         expect(response).to have_http_status(:unauthorized)
       end
     end
 
-    context 'given user is logged out' do
-      it 'renders :unauthorized response if signed in' do
-        attributes = valid_attributes
-        user = create(:user, attributes)
-        jwt = confirm_and_login(user)
-        logout(jwt)
+    context 'when user trying to fake identity' do
+      it 'gives "Signature verification raised" error' do
+        # Existing user.
+        user1 = create(:user)
 
-        get_with_token '/users/test', { id: user.id }, { 'Authorization' => jwt }
+        # New user.
+        user2 = create(:user)
+        jwt_2 = confirm_and_login(user2)
+        expect(response).to have_http_status(:created)
 
+        jwt_split = jwt_2.split('.')
+
+        # Temper with the sub id.
+        payload = JSON.parse(Base64.decode64 jwt_split[1])
+        payload['sub'] = user1.id.to_s
+        # payload['exp'] = 123
+
+        jwt_split[1] = Base64.encode64(payload.to_json).tr('+/', '-_').gsub(/[\n=]/, '')
+        jwt = jwt_split.join('.')
+
+        get_with_token '/users/test', { id: user1.id }, { 'Authorization' => jwt }
+
+        expect(response).to have_http_status(:unauthorized)
+        expect(response.body).to eql({ error: 'Signature verification raised' }.to_json)
+      end
+    end
+
+    context 'as logged out user' do
+      it 'responds with :unauthorized' do
+        logout(user_jwt)
+
+        get_with_token '/users/test', { id: user.id }, { 'Authorization' => user_jwt }
         expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
   describe 'GET /users/show/:id' do
-    context 'given user is logged in' do
-      it 'renders response' do
-        attributes = valid_attributes
-        user = create(:user, attributes)
-        jwt = confirm_and_login(user)
-
-        get_with_token "/users/show/#{user.id}", {}, { 'Authorization' => jwt }
-
+    context 'as logged in user' do
+      it 'responds with :ok' do
+        get_with_token "/users/show/#{user.id}", {}, { 'Authorization' => user_jwt }
         expect(response).to have_http_status(:ok)
+      end
 
-        expected = {
-            id: user.id,
-            email: attributes[:email],
-            first_name: attributes[:first_name],
-            last_name: attributes[:last_name],
-            city: attributes[:city],
-            country: attributes[:country],
-            post_code: attributes[:post_code],
-        }
-        hash = JSON.parse(response.body)
-
-        expected.each { |k, v| expect(hash[k.to_s]).to eql(v) }
-        expect(response).to have_http_status(:ok)
+      it 'shows user data' do
+        get_with_token "/users/show/#{user.id}", {}, { 'Authorization' => user_jwt }
+        expect(response.body).to eql(user_attributes.to_json)
       end
     end
   end
 
   describe 'POST /users' do
-    context 'given valid attributes' do
-      before(:each) do
-        @attributes = valid_attributes
-      end
-
+    context 'with valid attributes' do
       it 'creates a new User' do
         expect {
-          post_with_token '/users', user: @attributes
+          post_with_token '/users', user: valid_attributes
         }.to change(User, :count).by(1)
       end
 
       it 'responds with 201 for valid parameters' do
-        post_with_token '/users', user: @attributes
+        post_with_token '/users', user: valid_attributes
         expect(response).to have_http_status(201)
       end
 
-      it 'renders json' do
-        post_with_token '/users', user: @attributes
+      it 'responds with json' do
+        post_with_token '/users', user: valid_attributes
+
         expected = {
             id: 1,
-            email: @attributes[:email],
+            email: valid_attributes[:email],
         }
 
         hash = JSON.parse(response.body)
@@ -113,7 +129,7 @@ RSpec.describe 'Users', type: :request do
       end
     end
 
-    context 'given invalid attributes' do
+    context 'with invalid attributes' do
       before(:each) do
         @attributes = invalid_attributes
       end
@@ -146,8 +162,8 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'POST /users/sign_in' do
-    context 'given valid attributes' do
-      it 'renders a successful response' do
+    context 'with valid attributes' do
+      it 'responds with a success' do
         user = create(:user)
         confirm_and_login(user)
 
@@ -156,7 +172,7 @@ RSpec.describe 'Users', type: :request do
     end
 
     context 'given invalid password' do
-      it 'renders an unsuccessful response' do
+      it 'responds with an unsuccess' do
         user = create(:user)
         user.password = 'wrong'
         confirm_and_login(user)
@@ -167,7 +183,7 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'DELETE /users/sign_out' do
-    context 'given user is logged in' do
+    context 'as logged in user' do
       before(:each) do
         @user = create(:user)
         @jwt = confirm_and_login(@user)
@@ -175,22 +191,19 @@ RSpec.describe 'Users', type: :request do
 
       it 'signs user out' do
         logout(@jwt)
-
         expect(response).to be_success
       end
     end
 
-    context 'given user is logged out' do
+    context 'as logged out user' do
       before(:each) do
         @user = create(:user)
         @jwt = confirm_and_login(@user)
         logout(@jwt)
       end
 
-      it 'JWT is not the same' do
-        jwt = confirm_and_login(@user)
-
-        expect(@jwt).to_not eql(jwt)
+      it 'changes JWT' do
+        expect(@jwt).to_not eql(confirm_and_login(@user))
       end
     end
 

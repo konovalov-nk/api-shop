@@ -25,7 +25,7 @@ RSpec.describe UserMailer, type: :mailer do
       expect(welcome_mail.body.encoded).to match('Thank you for becoming a registered user')
     end
 
-    it 'should send one email' do
+    it 'sends one email' do
       assert_emails 1 do
         welcome_mail.deliver_now
       end
