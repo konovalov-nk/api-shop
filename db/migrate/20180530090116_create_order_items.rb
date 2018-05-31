@@ -5,6 +5,8 @@ class CreateOrderItems < ActiveRecord::Migration[5.1]
       t.integer :order_id
       t.integer :quantity
       t.decimal :price
+      t.text :mode
+      t.text :platform
       t.text :specials
 
       t.timestamps

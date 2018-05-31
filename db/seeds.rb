@@ -9,14 +9,17 @@
 specials = [
     {
         name: 'End game with 9 or more kills',
+        code: 'end9',
         bonus: 5.0,
     },
     {
         name: 'Stream my boost',
+        code: 'stream',
         bonus: 2.0,
     },
     {
         name: 'I want my old booster',
+        code: 'oldbooster',
         bonus: 0.0,
     },
 ]

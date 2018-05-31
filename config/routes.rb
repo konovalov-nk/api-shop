@@ -10,7 +10,9 @@ Rails.application.routes.draw do
   get '/users/show/:id', to: 'users#show', as: 'user_show'
 
   # Cart
-  post '/cart/create', to: 'cart#create', as: 'cart_create'
+  post '/cart', to: 'cart#create', as: 'cart_create'
+  put '/cart', to: 'cart#update', as: 'cart_update'
+  get '/cart', to: 'cart#index', as: 'cart_get'
 
   scope '/admin' do
     get '/users', to: 'users#index', as: 'user'

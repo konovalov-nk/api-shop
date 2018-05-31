@@ -3,4 +3,8 @@ class Order < ApplicationRecord
   has_many :order_items
 
   validates :user, presence: true
+
+  def remove_items
+    self.order_items.destroy_all
+  end
 end
