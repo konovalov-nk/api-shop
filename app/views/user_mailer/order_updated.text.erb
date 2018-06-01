@@ -1,0 +1,15 @@
+Dear <%= @user.first_name %>,
+
+You have updated your order <b>#<%= @order.id %></b> at Fortnite Elo Boosting.
+
+Here is your order information:
+
+Order Number: #<%= @order.id %>
+  <% @order.order_items.each do |item| %>
+    - Fortnite Boost - Mode: <%= item.mode.upcase %>, Platform: <%= item.platform.upcase %>, Amount: <%= item.quantity %><%= specials(item) %>. -- <%= price(item) %>
+  <% end %>
+
+  <%= coupon(@order) %>
+  Total: <%= total(@order) %>
+
+You can now pay for it using your preferred method at https://www.fortniteboosted.com/payment

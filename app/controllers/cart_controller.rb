@@ -38,6 +38,11 @@ class CartController < ApplicationController
     end
 
     if @order.save
+      if params[:action] === 'create'
+        UserMailer.order_received(current_user, @order).deliver_now
+      else
+        UserMailer.order_updated(current_user, @order).deliver_now
+      end
       render json: {
           order: {
               id: (@order.id.nil? ? 0 : @order.id),

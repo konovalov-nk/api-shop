@@ -5,6 +5,18 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.welcome_email(@user)
   end
 
+  def order_received
+    @user = FactoryBot.create(:user)
+    @order = FactoryBot.create(:order_with_items)
+    UserMailer.order_received(@user, @order)
+  end
+
+  def order_updated
+    @user = FactoryBot.create(:user)
+    @order = FactoryBot.create(:order_with_items)
+    UserMailer.order_updated(@user, @order)
+  end
+
   def confirmation_instructions
     @user = FactoryBot.create(:user)
     UserMailer.confirmation_instructions(@user, {})

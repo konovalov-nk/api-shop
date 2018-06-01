@@ -183,36 +183,36 @@ RSpec.describe 'Cart', type: :request do
 
     context 'as valid user with existing order' do
       it 'responds with 200' do
-        get_with_token '/cart', {}, 'Authorization' => @order_user_jwt
+        get_with_token '/cart', {}, { 'Authorization' => @order_user_jwt }
         expect(response).to have_http_status(:ok)
       end
 
       it 'returns order number' do
-        get_with_token '/cart', {}, 'Authorization' => @order_user_jwt
+        get_with_token '/cart', {}, { 'Authorization' => @order_user_jwt }
         expect(JSON.parse(response.body)['order']['id']).to eql(1)
       end
 
       it 'returns order items' do
-        get_with_token '/cart', {}, 'Authorization' => @order_user_jwt
+        get_with_token '/cart', {}, { 'Authorization' => @order_user_jwt }
         expect(JSON.parse(response.body)['items'].size).to be > 0
       end
     end
 
     context 'as a valid user without existing order' do
       it 'responds with 200' do
-        get_with_token '/cart', {}, 'Authorization' => user_jwt
+        get_with_token '/cart', {}, { 'Authorization' => user_jwt }
         expect(response).to have_http_status(:ok)
       end
 
       it 'returns 0 for order_id' do
-        get_with_token '/cart', {}, 'Authorization' => user_jwt
+        get_with_token '/cart', {}, { 'Authorization' => user_jwt }
         expect(JSON.parse(response.body)['order']['id']).to eql(0)
       end
     end
 
     context 'as invalid user' do
       it 'responds with :unauthorized' do
-        get_with_token '/cart', {}, 'Authorization' => 'Bearer 123.2345.2431'
+        get_with_token '/cart', {}, { 'Authorization' => 'Bearer 123.2345.2431' }
         expect(response).to have_http_status(:unauthorized)
       end
     end

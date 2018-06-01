@@ -12,7 +12,7 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
     super
     if resource.id
       @user = User.find(resource.id)
-      UserMailer.welcome_email(@user)
+      UserMailer.welcome_email(@user).deliver_now
     end
   end
 

@@ -3,8 +3,9 @@ FactoryBot.define do
     product
     order
     quantity { Faker::Number.positive 1, 20 }
-    mode { 'solo' }
-    platform { 'pc' }
-    specials { 'end9,stream,oldbooster' }
+    price { Faker::Number.positive 1, 20 }
+    mode { %w(solo duo squad).sample(1) }
+    platform { %w(pc xbox ps4).sample(1) }
+    specials { %w(end9 stream oldbooster).sample(rand(0..3)).join(',') }
   end
 end
