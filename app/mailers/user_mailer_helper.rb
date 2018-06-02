@@ -24,4 +24,8 @@ module UserMailerHelper
   def coupon(order)
     "Promo Code: #{order.coupon.upcase}, 10% discount" if order.coupon.downcase === 'fortnite1'
   end
+
+  def description(item)
+    "- Fortnite Boost - Mode: #{item.mode.upcase}, Platform: #{item.platform.upcase}, Amount: #{item.quantity}#{specials(item)}. -- #{price(item)}"
+  end
 end

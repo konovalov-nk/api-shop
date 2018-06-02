@@ -3,13 +3,7 @@
 <p>Thank you for becoming a registered user at Fortnite Elo Boosting!</p>
 
 Here is your account information:
-<pre>
-Name:      <%= @user.full_name %>
-Email:     <%= @user.email %>
-Country:   <%= @user.country_name %>
-City:      <%= @user.city %>
-Post Code: <%= @user.post_code %>
-Password:  [hidden for security purposes]
-</pre>
+
+<%= render 'partials/account_information', user: @user %>
 
 <p>Thanks for joining and have a great day!</p>

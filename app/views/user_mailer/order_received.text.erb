@@ -4,12 +4,6 @@ We have successfully received your order at Fortnite Elo Boosting!
 
 Here is your order information:
 
-Order Number: #<%= @order.id %>
-  <% @order.order_items.each do |item| %>
-    - Fortnite Boost - Mode: <%= item.mode.upcase %>, Platform: <%= item.platform.upcase %>, Amount: <%= item.quantity %><%= specials(item) %>. -- <%= price(item) %>
-  <% end %>
-
-  <%= coupon(@order) %>
-  Total: <%= total(@order) %>
+<%= render 'partials/order_information', order: @order %>
 
 You can now pay for it using your preferred method at https://www.fortniteboosted.com/payment

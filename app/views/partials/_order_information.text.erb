@@ -1,0 +1,7 @@
+Order Number: #<%= @order.invoice %>
+  <% @order.order_items.each do |item| %>
+    <%= description(item) %>
+  <% end %>
+
+<%= coupon(@order) %>
+Total: <%= total(@order) %>

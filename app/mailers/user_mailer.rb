@@ -11,6 +11,13 @@ class UserMailer < Devise::Mailer
     mail(to: email_with_name, subject: 'Thank you for joining!')
   end
 
+  def order_paid(user, order)
+    @user = user
+    @order = order
+    email_with_name = %("#{user.full_name}" <#{user.email}>)
+    mail(to: email_with_name, subject: "We have received your payment for the order ##{$order.invoice}.")
+  end
+
   def order_received(user, order)
     @user = user
     @order = order

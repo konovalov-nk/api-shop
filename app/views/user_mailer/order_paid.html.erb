@@ -1,0 +1,9 @@
+<h1>Dear <%= @user.first_name %>,</h1>
+
+<p>We have received your payment for the order <b>#<%= @order.invoice %></b> at Fortnite Elo Boosting!</p>
+
+Here is your order information:
+
+<%= render 'partials/_order_information', order: @order %>
+
+<p>Thank you for using Fortnite Elo Boosting! We would contact you shortly.</p>

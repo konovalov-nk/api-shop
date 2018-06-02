@@ -6,7 +6,7 @@ class WebhookController < ApplicationController
 
   def paypal
     webhook = params[:webhook]
-    if Webhook.exists?(webhook_id: webhook[:id])
+    if ::Webhook.exists?(webhook_id: webhook[:id])
       WebhookLog.info "duplicate webhook event #{webhook[:id]}"
       head 204 and return
     end
@@ -37,6 +37,8 @@ class WebhookController < ApplicationController
         order = ::Order.find_by_invoice(order_invoice)
         order.status = 'paid'
         order.save!
+
+        ::UserMailer.order_paid(order.user, order).deliver_now
       end
     end
 
