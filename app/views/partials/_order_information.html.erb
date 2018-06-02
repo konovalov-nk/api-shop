@@ -1,4 +1,4 @@
-Order Number: #<%= @order.invoice %>
+<p>Order Number: #<%= @order.invoice %></p>
 <ul>
 <% @order.order_items.each do |item| %>
   <li><%= description(item) %></li>

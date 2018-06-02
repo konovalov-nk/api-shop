@@ -15,7 +15,7 @@ class UserMailer < Devise::Mailer
     @user = user
     @order = order
     email_with_name = %("#{user.full_name}" <#{user.email}>)
-    mail(to: email_with_name, subject: "We have received your payment for the order ##{$order.invoice}.")
+    mail(to: email_with_name, subject: "We have received your payment for the order ##{order.invoice}.")
   end
 
   def order_received(user, order)
@@ -29,7 +29,7 @@ class UserMailer < Devise::Mailer
     @user = user
     @order = order
     email_with_name = %("#{user.full_name}" <#{user.email}>)
-    mail(to: email_with_name, subject: "You have updated your order ##{order.id}.")
+    mail(to: email_with_name, subject: "You have updated your order ##{order.invoice}.")
   end
 
   def confirmation_instructions(record, token, opts = {})

@@ -26,6 +26,6 @@ module UserMailerHelper
   end
 
   def description(item)
-    "- Fortnite Boost - Mode: #{item.mode.upcase}, Platform: #{item.platform.upcase}, Amount: #{item.quantity}#{specials(item)}. -- #{price(item)}"
+    "Fortnite Boost - Mode: #{item.mode.upcase}, Platform: #{item.platform.upcase}, Amount: #{item.quantity}#{specials(item)}. -- #{price(item)}"
   end
 end
