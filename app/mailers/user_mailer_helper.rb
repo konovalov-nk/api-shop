@@ -26,6 +26,11 @@ module UserMailerHelper
   end
 
   def description(item)
-    "Fortnite Boost - Mode: #{item.mode.upcase}, Platform: #{item.platform.upcase}, Amount: #{item.quantity}#{specials(item)}. -- #{price(item)}"
+    "Fortnite Boost - Mode: #{item.mode.upcase}, Platform: #{item.platform.upcase}, Amount: #{item.quantity}, Account: #{item.account_name}#{specials(item)}. -- #{price(item)}"
+  end
+
+  def accounts(order)
+    accounts, count = [order.order_items.map { |item| item.account_name }.join(', '), order.order_items.count]
+    "We will contact you soon for your #{count > 1 ? Inflector.pluralize('accounts') : 'account'}: #{accounts}"
   end
 end

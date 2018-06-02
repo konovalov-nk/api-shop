@@ -34,6 +34,13 @@ class Order < ApplicationRecord
         .reduce(0) { |r, price| r += price }.round(2) === 0.0
   end
 
+  def total_price
+    discount = self.coupon.downcase === 'fortnite1' ? 0.1 : 0.0
+    self.order_items
+        .map { |item| get_price(item, discount) }
+        .reduce(0) { |r, price| r += price }.round(2)
+  end
+
   private
 
     def get_price(item, discount)

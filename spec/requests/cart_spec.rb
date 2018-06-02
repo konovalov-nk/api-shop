@@ -31,9 +31,9 @@ RSpec.describe 'Cart', type: :request do
   let(:valid_params) { {
       order: { details: 'Some details...' },
       order_items: [
-          { product_id: 1, quantity: 3, price: 30.0, platform: 'pc', mode: 'solo', specials: 'end9' },
-          { product_id: 1, quantity: 4, price: 40.0, platform: 'pc', mode: 'solo', specials: 'end9,stream,oldbooster' },
-          { product_id: 1, quantity: 5, price: 50.0, platform: 'pc', mode: 'solo', specials: '' },
+          { product_id: 1, quantity: 3, price: 100.0, platform: 'pc', mode: 'solo', specials: 'end9', account_name: 'test', password: 'secret' },
+          { product_id: 1, quantity: 4, price: 8.0, platform: 'pc', mode: 'solo', specials: 'end9,stream,oldbooster', account_name: 'test', password: 'secret' },
+          { product_id: 1, quantity: 5, price: 50.0, platform: 'pc', mode: 'solo', specials: '', account_name: 'test', password: 'secret' },
       ]
   } }
   let(:invalid_params) { {
@@ -69,14 +69,6 @@ RSpec.describe 'Cart', type: :request do
         expect {
           post_with_token '/cart', valid_params, 'Authorization' => user_jwt
         }.to change(Order, :count).by(1)
-      end
-
-      it 'creates an order without specials' do
-        valid_params[:order_items][0][:specials] = ''
-        expect {
-          post_with_token '/cart', valid_params, 'Authorization' => user_jwt
-        }.to change(Order, :count).by(1)
-        expect(response).to have_http_status(:created)
       end
 
       it 'raises ParameterMissing error with invalid params' do
@@ -136,14 +128,6 @@ RSpec.describe 'Cart', type: :request do
 
       it 'changes an order without order details' do
         valid_params[:order] = nil
-        expect {
-          put_with_token '/cart', valid_params, 'Authorization' => @order_user_jwt
-        }.to change(Order, :count).by(0)
-        expect(response).to have_http_status(:created)
-      end
-
-      it 'changes an order without specials' do
-        valid_params[:order_items][0][:specials] = ''
         expect {
           put_with_token '/cart', valid_params, 'Authorization' => @order_user_jwt
         }.to change(Order, :count).by(0)

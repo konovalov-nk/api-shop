@@ -6,4 +6,4 @@ Here is your order information:
 
 <%= render 'partials/order_information', order: @order %>
 
-You can now pay for it using your preferred method at https://www.fortniteboosted.com/payment
+Thank you, <%= @user.first_name %>! <%= accounts(@order) %>.

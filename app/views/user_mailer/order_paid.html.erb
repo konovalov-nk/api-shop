@@ -6,4 +6,4 @@ Here is your order information:
 
 <%= render 'partials/order_information', order: @order %>
 
-<p>Thank you for using Fortnite Elo Boosting! We would contact you shortly.</p>
+<p>Thank you, <%= @user.first_name %>! <%= accounts(@order) %>.</p>

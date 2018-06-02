@@ -18,6 +18,8 @@ class CartController < ApplicationController
             quantity: item.quantity,
             price: item.price,
             specials: item.specials,
+            account_name: item.account_name,
+            password: item.password,
         } },
     }, status: :ok
   end
@@ -40,7 +42,7 @@ class CartController < ApplicationController
     end
 
     render json: {
-        error: 'Incorrect price.'
+        error: "Incorrect price. Should be equal to #{@order.total_price}"
     }, status: :unprocessable_entity and return unless @order.price_same?
 
     if @order.save
@@ -93,11 +95,11 @@ class CartController < ApplicationController
 
     def order_items_params
       params.permit(
-        order_items: [:product_id, :quantity, :price, :mode, :platform, :specials],
+        order_items: [:product_id, :quantity, :price, :mode, :platform, :specials, :account_name, :password],
         order: [:details, :coupon],
       ).tap do |filtered|
         filtered[:order_items].each do |o_i|
-          o_i.require([:product_id, :quantity, :price, :mode, :platform])
+          o_i.require([:product_id, :quantity, :price, :mode, :platform, :account_name, :password])
         end
       end
     end

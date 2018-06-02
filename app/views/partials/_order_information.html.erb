@@ -1,4 +1,4 @@
-<p>Order Number: #<%= @order.invoice %></p>
+<em>Order Number: #<%= @order.invoice %></em>
 <ul>
 <% @order.order_items.each do |item| %>
   <li><%= description(item) %></li>
@@ -6,4 +6,4 @@
 </ul>
 
 <b><%= coupon(@order) %></b>
-Total: <%= total(@order) %>
+<p>Total: <%= total(@order) %></p>
