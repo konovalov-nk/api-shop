@@ -1,15 +1,15 @@
 class CartController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_order, only: [:create, :update]
+  before_action :set_order, only: [:create, :update, :index]
 
   # GET /cart
   def index
-    @order = Order.find_or_initialize_by(user_id: current_user.id, status: 'unpaid')
     render json: {
         order: {
-            id: (@order.id.nil? ? 0 : @order.id),
+            new: @order.id.nil?,
             details: @order.details,
             coupon: @order.coupon,
+            invoice: @order.invoice,
         },
         items: @order.order_items.map { |item| {
             product_id: item.product_id,
@@ -24,8 +24,10 @@ class CartController < ApplicationController
 
   # POST /cart
   def create
+    render json: @order.errors, status: :unprocessable_entity and return unless @order.save!
+
     order_items_params[:order_items].each do |order_item|
-      @order.order_items.create!(order_item)
+      @order.order_items.create(order_item)
     end
 
     @order.details = ''
@@ -45,7 +47,8 @@ class CartController < ApplicationController
       end
       render json: {
           order: {
-              id: (@order.id.nil? ? 0 : @order.id),
+              new: @order.id.nil?,
+              invoice: @order.invoice,
           },
       }, status: :created
     else
@@ -67,8 +70,10 @@ class CartController < ApplicationController
 
   private
     def set_order
-      @order = Order.find_or_create_by(user_id: current_user.id, status: 'unpaid')
-      @order.status = 'unpaid'
+      @order = Order.find_or_initialize_by(
+        user_id: current_user.id,
+        status: 'unpaid',
+      )
     end
 
     def order_items_params

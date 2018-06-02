@@ -53,9 +53,9 @@ RSpec.describe 'Cart', type: :request do
         expect(response).to have_http_status(:created)
       end
 
-      it 'returns order number' do
+      it 'returns invoice' do
         post_with_token '/cart', valid_params, 'Authorization' => user_jwt
-        expect(response.body).to eql({ order: { id: 1 } }.to_json)
+        expect(response.body).to match(/invoice/)
       end
 
       it 'creates an order' do
@@ -115,9 +115,9 @@ RSpec.describe 'Cart', type: :request do
         expect(response).to have_http_status(:created)
       end
 
-      it 'returns order number' do
+      it 'returns invoice' do
         put_with_token '/cart', valid_params, 'Authorization' => @order_user_jwt
-        expect(response.body).to eql({ order: { id: 1 } }.to_json)
+        expect(response.body).to match(/invoice/)
       end
 
       it 'does not create new order' do
@@ -175,38 +175,42 @@ RSpec.describe 'Cart', type: :request do
 
   describe 'GET /cart' do
     before(:each) do
-      @product = create(:product)
       @order_with_items = create(:order_with_items)
       @order_user_jwt = confirm_and_login(@order_with_items.user)
-      @user_jwt = confirm_and_login(@order_with_items.user)
     end
 
     context 'as valid user with existing order' do
-      it 'responds with 200' do
+      before(:each) do
         get_with_token '/cart', {}, { 'Authorization' => @order_user_jwt }
+      end
+      it 'responds with 200' do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'returns order number' do
-        get_with_token '/cart', {}, { 'Authorization' => @order_user_jwt }
-        expect(JSON.parse(response.body)['order']['id']).to eql(1)
+      it 'returns existing order' do
+        expect(response.body).to match(/"new":false/)
+      end
+
+      it 'returns invoice' do
+        expect(response.body).to match(/invoice/)
       end
 
       it 'returns order items' do
-        get_with_token '/cart', {}, { 'Authorization' => @order_user_jwt }
         expect(JSON.parse(response.body)['items'].size).to be > 0
       end
     end
 
     context 'as a valid user without existing order' do
-      it 'responds with 200' do
+      before(:each) do
         get_with_token '/cart', {}, { 'Authorization' => user_jwt }
+      end
+
+      it 'responds with 200' do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'returns 0 for order_id' do
-        get_with_token '/cart', {}, { 'Authorization' => user_jwt }
-        expect(JSON.parse(response.body)['order']['id']).to eql(0)
+      it 'returns new order' do
+        expect(response.body).to match(/"new":true/)
       end
     end
 

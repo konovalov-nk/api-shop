@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
-  resources :order_items
-  resources :orders
-  resources :products
+  # resources :ipns
+  # resources :webhooks
+  # resources :order_items
+  # resources :orders
+  # resources :products
   devise_for :users, controllers: {
       registrations: 'sessions/registrations',
   }, defaults: { format: :json }
@@ -13,6 +15,11 @@ Rails.application.routes.draw do
   post '/cart', to: 'cart#create', as: 'cart_create'
   put '/cart', to: 'cart#update', as: 'cart_update'
   get '/cart', to: 'cart#index', as: 'cart_get'
+
+  # PayPal webhooks
+  post '/webhook/paypal', to: 'webhook#paypal', as: 'paypal_webhook'
+  post '/webhooks/paypal', to: 'webhook#paypal', as: 'paypal_webhooks'
+  post '/webhook/paypal_ipn', to: 'webhook#paypal_ipn', as: 'paypal_ipn'
 
   scope '/admin' do
     get '/users', to: 'users#index', as: 'user'
