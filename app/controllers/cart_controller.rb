@@ -39,6 +39,10 @@ class CartController < ApplicationController
       @order.coupon = order_items_params[:order][:coupon]
     end
 
+    render json: {
+        error: 'Incorrect price.'
+    }, status: :unprocessable_entity and return unless @order.price_same?
+
     if @order.save
       if params[:action] === 'create'
         UserMailer.order_received(current_user, @order).deliver_now
