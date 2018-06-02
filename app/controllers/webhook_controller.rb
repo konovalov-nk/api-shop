@@ -47,7 +47,7 @@ class WebhookController < ApplicationController
       w.payload = event_body
     end.save!
 
-    valid
+    render nothing: true
   end
 
   def paypal_ipn
@@ -81,6 +81,6 @@ class WebhookController < ApplicationController
     #   end
     # end
     #
-    # render :nothing
+    render nothing: true
   end
 end
