@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   # Cart
   post '/cart', to: 'cart#create', as: 'cart_create'
+  post '/cart/complete', to: 'cart#complete', as: 'cart_complete'
   put '/cart', to: 'cart#update', as: 'cart_update'
   get '/cart', to: 'cart#index', as: 'cart_get'
 

@@ -62,6 +62,17 @@ class CartController < ApplicationController
     self.create
   end
 
+  def complete
+    if invoice_params.dig(:order, :invoice)
+      order = Order.find_by_invoice(invoice_params[:order][:invoice])
+      if order.status === 'unpaid'
+        order.status = 'processing'
+        order.save!
+      end
+    end
+    render json: {}, status: :ok
+  end
+
   #
   # # DELETE /cart/1
   # def destroy
@@ -85,5 +96,9 @@ class CartController < ApplicationController
           o_i.require([:product_id, :quantity, :price, :mode, :platform])
         end
       end
+    end
+
+    def invoice_params
+      params
     end
 end
