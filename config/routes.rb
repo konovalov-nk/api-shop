@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   put '/cart', to: 'cart#update', as: 'cart_update'
   get '/cart', to: 'cart#index', as: 'cart_get'
 
+  # OrderHistory
+  get '/orders/history', to: 'orders#history', as: 'order_history'
+
   # PayPal webhooks
   post '/webhook/paypal', to: 'webhook#paypal', as: 'paypal_webhook'
   post '/webhooks/paypal', to: 'webhook#paypal', as: 'paypal_webhooks'

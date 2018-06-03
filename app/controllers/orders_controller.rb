@@ -1,6 +1,13 @@
 class OrdersController < ApplicationController
-  before_action :forbid
+  before_action :authenticate_user!
+  before_action :forbid, only: [:index, :show, :create, :update, :destroy]
   before_action :set_order, only: [:show, :update, :destroy]
+
+  # GET /orders/history
+  def history
+    @orders = Order.where(user_id: current_user.id).all
+    render json: @orders.to_json(include: :order_items)
+  end
 
   # GET /orders
   def index
