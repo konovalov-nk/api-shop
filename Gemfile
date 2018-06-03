@@ -7,6 +7,7 @@ end
 
 gem 'rails', '~> 5.1.5'
 
+gem 'dotenv-rails'
 gem 'sqlite3'
 gem 'puma', '~> 3.7'
 
@@ -19,7 +20,6 @@ gem 'rack-cors'
 
 group :development, :test do
   gem 'byebug'
-  gem 'dotenv-rails'
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'guard-rspec', require: false

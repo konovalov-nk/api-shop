@@ -6,7 +6,6 @@ class Order < ApplicationRecord
   BASE_VALUE_PER_GAME = 10
   MULT_DUO_EXTRA = 0.4
   MULT_SQUAD_EXTRA = 0.8
-  MULT_PLAY_BOOSTER = 0.4
   BONUS_9_KILLS = 5
   BONUS_STREAM = 2
   BONUS_OLD_BOOSTER = 0
@@ -47,19 +46,16 @@ class Order < ApplicationRecord
       specials = item.specials.split(',')
       multiplier = BASE_MULTIPLIER
 
-      case item.mode
-      when 'solo'
-      when 'duo'
-        multiplier += MULT_DUO_EXTRA
-      else
-        multiplier += MULT_SQUAD_EXTRA
-      end
-
       if specials.include?('playbooster')
-        multiplier += MULT_PLAY_BOOSTER
+        case item.mode
+        when 'duo'
+          multiplier += MULT_DUO_EXTRA
+        when 'squad'
+          multiplier += MULT_SQUAD_EXTRA
+        else
+          #
+        end
       end
-
-      multiplier -= discount
 
       value_per_game = BASE_VALUE_PER_GAME
       value_per_game += (specials.include?('end9') ? BONUS_9_KILLS : 0)
@@ -74,6 +70,7 @@ class Order < ApplicationRecord
           total -= ((item.quantity - (item.quantity % 5)) / 5) * value_per_game
         end
       end
-      total *= multiplier
+
+      total * multiplier * (1.0 - discount)
     end
 end
