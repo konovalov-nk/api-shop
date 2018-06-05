@@ -17,7 +17,11 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user.slice(:id, :email, :first_name, :last_name, :city, :country, :post_code)
+    render json: @user.slice(
+      :id, :email, :first_name, :last_name, :city,
+        :country, :post_code, :account_name, :account_password,
+        :skype, :discord, :contact_email, :preferred_communication
+    )
   end
 
   # POST /users

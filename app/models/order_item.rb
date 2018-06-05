@@ -4,4 +4,8 @@ class OrderItem < ApplicationRecord
 
   validates :order, presence: true
   validates :product, presence: true
+
+  def specials_array
+    self.specials.split ','
+  end
 end

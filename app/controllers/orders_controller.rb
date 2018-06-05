@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
 
   # GET /orders/history
   def history
-    @orders = Order.where(user_id: current_user.id).all
+    @orders = Order.where(user_id: current_user.id).order('created_at DESC').all
     render json: @orders.to_json(include: :order_items)
   end
 

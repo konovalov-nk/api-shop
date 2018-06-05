@@ -26,11 +26,23 @@ module UserMailerHelper
   end
 
   def description(item)
-    "Fortnite Boost - Mode: #{item.mode.upcase}, Platform: #{item.platform.upcase}, Amount: #{item.quantity}, Account: #{item.account_name}#{specials(item)}. -- #{price(item)}"
+    "Fortnite Boost - Mode: #{item.mode.upcase}, Platform: #{item.platform.upcase}, Amount: #{item.quantity}#{specials(item)}. -- #{price(item)}"
   end
 
-  def accounts(order)
-    accounts, count = [order.order_items.map { |item| item.account_name }.join(', '), order.order_items.count]
-    "We will contact you soon for your #{count > 1 ? Inflector.pluralize('accounts') : 'account'}: #{accounts}"
+  def we_will_contact(order)
+    preferred_methods = order.preferred_methods.split(',')
+
+    methods, count = [
+        preferred_methods.map { |m| "#{m.upcase_first} - #{order[m]}" }.join(', '),
+        preferred_methods.count,
+    ]
+
+    if order.account_name
+      "We will contact you soon for your account \"#{order.account_name}\" " \
+      "using your preferred contact #{count > 1 ? Inflector.pluralize('method') : 'method'}: #{methods}."
+    else
+      'We will contact you soon using your preferred contact ' \
+      "#{count > 1 ? Inflector.pluralize('method') : 'method'}: #{methods}."
+    end
   end
 end

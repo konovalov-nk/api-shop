@@ -40,6 +40,21 @@ class Order < ApplicationRecord
         .reduce(0) { |r, price| r += price }.round(2)
   end
 
+  def has_communications?
+    communications = ['skype', 'discord', 'contact_email']
+    self.preferred_communication.split(',').each do |c|
+      return true if communications.include?(c) && self[c].length > 0
+    end
+
+    false
+  end
+
+  def needs_account_details?
+    self.order_items
+        .map { |item| not item.specials_array.include?('playbooster') }
+        .reduce(false) { |r, not_include| r ||= not_include }
+  end
+
   private
 
     def get_price(item, discount)

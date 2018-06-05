@@ -30,6 +30,12 @@ RSpec.describe 'Users', type: :request do
         city: user.city,
         country: user.country,
         post_code: user.post_code,
+        account_name: user.account_name,
+        account_password: user.account_password,
+        skype: user.skype,
+        discord: user.discord,
+        contact_email: user.contact_email,
+        preferred_communication: user.preferred_communication,
     }
   }
 

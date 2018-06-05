@@ -36,9 +36,6 @@ ActiveRecord::Schema.define(version: 20180602073211) do
     t.text "specials"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "account_name"
-    t.string "password"
-    t.index ["account_name"], name: "index_order_items_on_account_name"
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
@@ -51,6 +48,12 @@ ActiveRecord::Schema.define(version: 20180602073211) do
     t.datetime "updated_at", null: false
     t.string "details"
     t.string "invoice"
+    t.string "account_name"
+    t.string "account_password"
+    t.string "discord"
+    t.string "email"
+    t.string "skype"
+    t.string "preferred_communication"
     t.index ["invoice"], name: "index_orders_on_invoice"
     t.index ["status"], name: "index_orders_on_status"
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -90,6 +93,12 @@ ActiveRecord::Schema.define(version: 20180602073211) do
     t.string "city"
     t.string "country"
     t.string "post_code"
+    t.string "account_name"
+    t.string "account_password"
+    t.string "discord"
+    t.string "contact_email"
+    t.string "skype"
+    t.string "preferred_communication"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
@@ -97,7 +106,7 @@ ActiveRecord::Schema.define(version: 20180602073211) do
   end
 
   create_table "webhooks", force: :cascade do |t|
-    t.integer "webhook_id"
+    t.string "webhook_id"
     t.string "order_invoice"
     t.text "payload"
     t.datetime "created_at", null: false
