@@ -9,6 +9,7 @@ gem 'rails', '~> 5.1.5'
 
 gem 'dotenv-rails'
 gem 'sqlite3'
+gem 'pg'
 gem 'puma', '~> 3.7'
 
 # gem 'jbuilder', '~> 2.5'

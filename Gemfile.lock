@@ -143,6 +143,7 @@ GEM
     paypal-sdk-rest (1.7.2)
       multi_json (~> 1.0)
       xml-simple
+    pg (1.0.0)
     powerpack (0.1.1)
     pry (0.11.3)
       coderay (~> 1.1.0)
@@ -272,6 +273,7 @@ DEPENDENCIES
   mailgun_rails
   normalize_country
   paypal-sdk-rest
+  pg
   puma (~> 3.7)
   rack-cors
   rails (~> 5.1.5)

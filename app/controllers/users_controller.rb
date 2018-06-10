@@ -21,6 +21,8 @@ class UsersController < ApplicationController
       :id, :email, :first_name, :last_name, :city,
         :country, :post_code, :account_name, :account_password,
         :skype, :discord, :contact_email, :preferred_communication
+    ).merge(
+      tawk_to_hash: OpenSSL::HMAC.hexdigest('SHA256', ENV['TAWK_TO_API_KEY'], @user.email)
     )
   end
 
