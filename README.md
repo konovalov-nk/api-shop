@@ -4,6 +4,10 @@ This is a part of a project I did from [May 21st to June 7th, 2018](https://www.
 
 It is a simple back-end for e-commerce website using Rails (REST API), PostgreSQL, `rspec`, a few things from [12-factor](https://12factor.net/) (such as `.env` configuration files). For a full list, see [Built with](#built-with).
 
+### Project URL (working example)
+
+[https://api.fn.br11k.me](https://api.fn.br11k.me)
+
 ### Getting Started
 
 To do ...
